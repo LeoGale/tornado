@@ -2,8 +2,10 @@ cmake_minimum_required (VERSION 2.6)
 
 #include (CheckFunctionExists)
 
-
 project (tornado C CXX)
+
+enable_testing()
+
 #project (tornado)
 #IF(APPLE)
 #    set (CMAKE_CXX_COMPILER "g++")
@@ -36,11 +38,15 @@ string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 message(STATUS "CXX DEBUG FLAGS ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "CXX RELEASE FLAGS ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "CXX FLAGS ${CMAKE_CXX_FLAGS}") 
 message(STATUS "BUILD EXMAPLES ${CMAKE_BUILD_NO_EXAMPLES}")
+message(STATUS "EXECUTABLE OUTPUT PATH ${EXECUTABLE_OUTPUT_PATH}")
+message(STATUS "LIBRARY OUTPATH PATH ${LIBRARY_OUTPATH_PATH}")
 
 #configure a header file to pass some of the CMake settings
 # to source code 
@@ -54,36 +60,29 @@ message(STATUS "PROJECT BINARY DIR ${PROJECT_BINARY_DIR}")
 message(STATUS "PROJECT SOURCE DIR ${PROJECT_SOURCE_DIR}")
 
 configure_file (
-    "${PROJECT_BINARY_DIR}/Config.h.in"
+    "${PROJECT_SOURCE_DIR}/Config.h.in"
     "${PROJECT_SOURCE_DIR}/Config.h"
     @ONLY
 )
 
 #check_function_exists(log HAVE_LOG)
 
-option (SEE_OBSERVE "See observe pattern example." ON)
+#option (SEE_OBSERVE "See observe pattern example." ON)
 
-include_directories(${PROJECT_BINARY_DIR})
+include_directories(${PROJECT_SOURCE_DIR})
 # comment below code out, make them optional.
 #include_directories("${PROJECT_BINARY_DIR}/observer")
-#add_subdirectory(observer)
 
-set (TORNADO_SRCS 
-    main.cc
-)
+add_subdirectory(tornado/base)
+add_subdirectory(tornado/net)
 
-if(SEE_OBSERVE)
-    include_directories("${PROJECT_BINARY_DIR}/observer")
-    add_subdirectory(observer)
+if(NOT CMAKE_BUILD_NO_EXMAPLES)
+    add_subdirectory(examples)
+else()
+    message(STATUS "Built with NO Examples")
 endif()
-#endif(SEE_OBSERVE)
-
 # add the intall targets 
 # CMAKE_INSTALL_PREFIX is used to determine 
 # the root of where the files will be installed
 #install (TARGETS tornado DESTINATION bin)
 #install (FILES "${PROJECT_BINARY_DIR}/Config.h" DESTINATION include)
-
-add_executable(tornado ${TORNADO_SRCS})
-#target_link_libraries (tornado observer)
-target_link_libraries (tornado ${EXTRA_LIBS})

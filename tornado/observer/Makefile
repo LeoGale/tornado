@@ -48,10 +48,10 @@ RM = /Applications/CMake.app/Contents/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/leo/code/workshop/tornado
+CMAKE_SOURCE_DIR = /Users/leo/github/tornado
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/leo/code/workshop/tornado
+CMAKE_BINARY_DIR = /Users/leo/github/tornado
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -78,16 +78,27 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/Applications/CMake.app/Contents/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
-	cd /Users/leo/code/workshop/tornado && $(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/code/workshop/tornado/CMakeFiles /Users/leo/code/workshop/tornado/observer/CMakeFiles/progress.marks
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/code/workshop/tornado/CMakeFiles 0
+	cd /Users/leo/github/tornado && $(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/github/tornado/CMakeFiles /Users/leo/github/tornado/observer/CMakeFiles/progress.marks
+	cd /Users/leo/github/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/github/tornado/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/clean
+	cd /Users/leo/github/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +108,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/preinstall
+	cd /Users/leo/github/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/preinstall
+	cd /Users/leo/github/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/leo/code/workshop/tornado && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/leo/github/tornado && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 observer/CMakeFiles/observer.dir/rule:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/CMakeFiles/observer.dir/rule
+	cd /Users/leo/github/tornado && $(MAKE) -f CMakeFiles/Makefile2 observer/CMakeFiles/observer.dir/rule
 .PHONY : observer/CMakeFiles/observer.dir/rule
 
 # Convenience name for target.
@@ -122,35 +133,35 @@ observer: observer/CMakeFiles/observer.dir/rule
 
 # fast build rule for target.
 observer/fast:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/build
+	cd /Users/leo/github/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/build
 .PHONY : observer/fast
 
-Observer.o: Observer.cc.o
+ObserverTest.o: ObserverTest.cc.o
 
-.PHONY : Observer.o
+.PHONY : ObserverTest.o
 
 # target to build an object file
-Observer.cc.o:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/Observer.cc.o
-.PHONY : Observer.cc.o
+ObserverTest.cc.o:
+	cd /Users/leo/github/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/ObserverTest.cc.o
+.PHONY : ObserverTest.cc.o
 
-Observer.i: Observer.cc.i
+ObserverTest.i: ObserverTest.cc.i
 
-.PHONY : Observer.i
+.PHONY : ObserverTest.i
 
 # target to preprocess a source file
-Observer.cc.i:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/Observer.cc.i
-.PHONY : Observer.cc.i
+ObserverTest.cc.i:
+	cd /Users/leo/github/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/ObserverTest.cc.i
+.PHONY : ObserverTest.cc.i
 
-Observer.s: Observer.cc.s
+ObserverTest.s: ObserverTest.cc.s
 
-.PHONY : Observer.s
+.PHONY : ObserverTest.s
 
 # target to generate assembly for a file
-Observer.cc.s:
-	cd /Users/leo/code/workshop/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/Observer.cc.s
-.PHONY : Observer.cc.s
+ObserverTest.cc.s:
+	cd /Users/leo/github/tornado && $(MAKE) -f observer/CMakeFiles/observer.dir/build.make observer/CMakeFiles/observer.dir/ObserverTest.cc.s
+.PHONY : ObserverTest.cc.s
 
 # Help Target
 help:
@@ -160,10 +171,11 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... test"
 	@echo "... observer"
-	@echo "... Observer.o"
-	@echo "... Observer.i"
-	@echo "... Observer.s"
+	@echo "... ObserverTest.o"
+	@echo "... ObserverTest.i"
+	@echo "... ObserverTest.s"
 .PHONY : help
 
 
@@ -175,6 +187,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/leo/code/workshop/tornado && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/leo/github/tornado && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

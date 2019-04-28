@@ -48,10 +48,10 @@ RM = /Applications/CMake.app/Contents/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/leo/code/workshop/tornado
+CMAKE_SOURCE_DIR = /Users/leo/github/tornado
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/leo/code/workshop/tornado
+CMAKE_BINARY_DIR = /Users/leo/github/tornado
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -78,11 +78,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/Applications/CMake.app/Contents/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/code/workshop/tornado/CMakeFiles /Users/leo/code/workshop/tornado/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/github/tornado/CMakeFiles /Users/leo/github/tornado/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/code/workshop/tornado/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/leo/github/tornado/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -171,6 +182,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... test"
 	@echo "... tornado"
 	@echo "... observer"
 	@echo "... main.o"

@@ -1,5 +1,5 @@
 set (Observer_Srcs 
-    Observer.cc
+    ObserverTest.cc
 )
 
 #install (TARGETS observer DESTINATION bin)
