@@ -1,5 +1,6 @@
 set(BASE_SRCS
-	Thread.cc
+	Thread.cpp
+	ThreadPool.cpp
    )
 add_library(tornado_base ${BASE_SRCS})
 target_link_libraries(tornado_base pthread)

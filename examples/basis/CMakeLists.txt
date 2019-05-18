@@ -1,0 +1,4 @@
+add_executable(observer ThreadPoolTest.cc)
+add_executable(templateTest TemplateTest.cc)
+target_link_libraries(observer tornado_base)
+target_link_libraries(templateTest tornado_base)

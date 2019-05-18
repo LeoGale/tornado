@@ -1,4 +1,5 @@
 set( NET_SRCS
+	Test.cc
    )
 
 add_library(tornado_net ${NET_SRCS})
@@ -16,6 +17,6 @@ set(HEADERS
 
 install(FILES ${HEADERS} DESTINATION include/tornado/net)
 
-add_subdirectory(inspect)
-add_subdirectory(http)
+#add_subdirectory(inspect)
+#add_subdirectory(http)
 

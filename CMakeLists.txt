@@ -22,6 +22,7 @@ ENDIF()
 
 set(CXX_FLAGS
 	-g
+#-o2
 	-Wno-unused-parameter
 	-Wno-sign-conversion
 	-Wno-old-style-cast

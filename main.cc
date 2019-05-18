@@ -1,10 +1,26 @@
 #include <iostream>
+#include <chrono>
 
 #include "Config.h"
+#include "ThreadPool.hpp"
+
 
 #ifdef SEE_OBSERVE
 #include "observer.hh"
 #endif
+void func()
+{
+    std::cout <<"test thread" << std::endl;
+}
+void testThreadPool()
+{
+    tornado::ThreadPool aThrPool(2, func);  
+
+    aThrPool.start();
+//std::this_thread::sleep_for(std::chrono_literals::2s);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    aThrPool.stop(); 
+}
 
 int main(int argc, char* argv[])
 {
@@ -22,5 +38,6 @@ int main(int argc, char* argv[])
 #else // otherwise use an iterative approach
   double result = 0.00;
 #endif
+  testThreadPool();
   return 0;
 }
