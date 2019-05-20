@@ -3,10 +3,9 @@ Follow IEEE 802.3 standard
 
 Ethernet II frame(traditional frame, no JF)
 
-—————————————————————————————————————————————————
-|.   Preamble     |.    SFD.   |.   MAC.(DST,SRC)     | length or type |      payload      | FCS(CRC32)  |     IPG      |
-|      7 bytes       |  1.bytes  |.   12( 6, 6) bytes        |   2bytes           |48-1500 bytes|.    4.bytes       | 12bytes.|
-—————————————————————————————————————————————————
+| Preameble | SFD | MAC(DST,SRC)| length or type | payload | FSC(CRC32) | IPG |
+|----|----|----|----|-----|----|-----|
+| 7 bytes | 1 bytes | 12(6,6) bytes | 2 bytes | 48-1500 bytes | 4 bytes |  12bytes |
 
 Basis: 64 ~ 1518 Bytes(only include Mac, length or type, payload, FSC)
 Total: 86 ~ 1538 Bytes
