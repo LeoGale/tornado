@@ -8,33 +8,34 @@ class Foo {
 template<typename T>
 void foo( T t);
 ## variadic template
-    * Args... defines what is called a "parameter pack". That's basically a sequence of (type/value) pairs from which you can "peel off" arguments starting with the first.
-    * How the program unpack the Args...
-        * printf
-            1. To build a type-safe printf.
-        * count
-        * tuple
-            1. To implement a tuple
-            2. To implement a tuple helper class
-        * invoke
-            1. to implement a invoke, like invoke(f, t1, t2, ..., tN)
-                1.1 (t1.*f)(t2, ..., tN) when f is a pointer to a member function of a class T.
-                1.2 ((*t1).*f)(t2,..., tN)
-                1.3 t1.*f when f is a pointer to member data of a class T.
-                1.4 (*t1).*f
-                1.5 f(t1,t2,...,tN) in all other cases.
-                1.6 zeroCopy parameters??
-            1
+
+* Args... defines what is called a "parameter pack". That's basically a sequence of (type/value) pairs from which you can "peel off" arguments starting with the first.
+* How the program unpack the Args...
+  * printf
+      1. To build a type-safe printf.
+  * count
+  * tuple
+      1. To implement a tuple
+        2. To implement a tuple helper class
+  * invoke
+      1. to implement a invoke, like invoke(f, t1, t2, ..., tN)
+        1.1 (t1.*f)(t2, ..., tN) when f is a pointer to a member function of a class T.
+        1.2 ((*t1).*f)(t2,..., tN)
+        1.3 t1.*f when f is a pointer to member data of a class T.
+        1.4 (*t1).*f
+        1.5 f(t1,t2,...,tN) in all other cases.
+        1.6 zeroCopy parameters??
+
 ### member pointer of template class
 #### A pointer to non-static member function
-    * have a hidden parameter that corresponds to the this pointer which points to the instance data for the object[RpcCallback]().
-    * A member function is meaningless without an object to invoke it on.
-    * Can Not convert a pointer to non-static member function to void\*
-    * Don't forget the const keyword if member function has const qualifier.
+* have a hidden parameter that corresponds to the this pointer which points to the instance data for the object[RpcCallback]().
+* A member function is meaningless without an object to invoke it on.
+* Can Not convert a pointer to non-static member function to void\*
+* Don't forget the const keyword if member function has const qualifier.
 #### A pointer to static member function
-    * static member functions do not require an actual object to be invoked, so pointers-to-static-member-functions are usually type-compatible with regular pointers-to-functions.
-    * It actually would have to be an __extern "C"__ non-member function to be correct, since "C linkage" doesn't only cover things like name mangling, but also calling conventions, which might be different between C and C++.
-    
+* static member functions do not require an actual object to be invoked, so pointers-to-static-member-functions are usually type-compatible with regular pointers-to-functions.
+* It actually would have to be an __extern "C"__ non-member function to be correct, since "C linkage" doesn't only cover things like name mangling, but also calling conventions, which might be different between C and C++.
+
 #### Reference
 
 ```C++
@@ -62,12 +63,12 @@ int main()
     MemFuncPtr calFunc = &Foo::cal;
     (aFoo.*calFunc)('a', 0.123);
     CALL_MEMBER_FUNC(aFoo, calFunc)('a', 0.123);
-    //const member function pointer 
+    //const member function pointer
     ConstMemFuncPtr ageFunc = &Foo::age;
     (aFoo.*ageFunc)();
-    
+
     //global function
-    
+
     GlobalFuncPtr sayStatFunc = &Foo::say;
     sayStatFunc();
 
@@ -120,7 +121,7 @@ int main()
     aFunc(aFoo);//aFunc(std::ref(aFoo));
 #endif
     aFoo.setAge(3);
-     
+
     FooMemPtr aMemFunc = &Foo::say;
     //(aFoo.*aMemFunc)();
     CALL_MEMBER_FUNC(aFoo, aMemFunc)();
@@ -130,9 +131,9 @@ int main()
 
 #### A pointer to static member function
 * **Conclusion**
-Using the expression **int(CLASS::*)** to present a member pointer(member object pointer or member function pointer), int is non-meaningful, it can be double, long, be any concrete type that the compiler can know.
+Using the expression __int(CLASS: : *)__ to present a member pointer(member object pointer or member function pointer), int is non-meaningful, it can be double, long, be any concrete type that the compiler can know.
 
-Using **(T CLASS::*)** to declare a member function pointer which return type is T 
+Using __(T CLASS: : \*)__ to declare a member function pointer which return type is T
 
 
 * **Practice**
@@ -141,7 +142,7 @@ EventCallback in Epoll
 
 ```
 
-### template function 
+### template function
 
 ```C++
 template<typename T>
@@ -160,7 +161,7 @@ class A {
 };
 ```
 
-## partial template specialization 
+## partial template specialization
 
 ```C++
 template<class T1, class T2, int I>
@@ -197,7 +198,7 @@ class <X, T*, I> {};
 
 ### partial specialization requires
 
-    * The argument list cannot be identical to the non-specialized argument list.
+* The argument list cannot be identical to the non-specialized argument list.
 
 ```C++
 template<class T1, class T2, int I> class B{}; //primary template
@@ -209,22 +210,22 @@ template<class X, class Y, int N> classB<X,Y,N> {};//error
 template<int N, typename T1, typename... Ts> struct B;
 template<typename... Ts> struct B<0, Ts...> {};//Error: not more specialized
 ```
-    * Default arguments cannot appear int the argument list
-    * If any argument is a pack expansion, it must be the last argument in the list
-    * Non-type argument expression cannot use the name of the template parameter except when it is exactly the name of the template parameter(util c++14) Non-type argument expressions can use template parameters as long as the parameter appears at least once outside a non-deduced context(since C++14)
+* Default arguments cannot appear int the argument list
+* If any argument is a pack expansion, it must be the last argument in the list
+* Non-type argument expression cannot use the name of the template parameter except when it is exactly the name of the template parameter(util c++14) Non-type argument expressions can use template parameters as long as the parameter appears at least once outside a non-deduced context(since C++14)
 
 ```C++
 template <int I, int J> struct A {};
 template <int I> struct A<I+5, I*2> {}; // error, I is not deducible
- 
+
 template <int I, int J, int K> struct B {};
 template <int I> struct B<I, I*2, 2> {};  // OK: first parameter is deducible
 ```
-    * Non-type template argument cannot specialize a template parameter whose type depends on a parameter of the specialization
+* Non-type template argument cannot specialize a template parameter whose type depends on a parameter of the specialization
 
 ```C++
 template <class T, T t> struct C{};//primary template
-template <class T> struct C<T, 1>; //error: type of the argument 1 is T, 
+template <class T> struct C<T, 1>; //error: type of the argument 1 is T,
                                    // which depends on the parameter T
 template<int X, int (*array_ptr)[X]> class B{}; //primary template
 
@@ -255,24 +256,24 @@ Z<int, int*> z;//name lookup finds N::Z(the primary specialization),
 
 When a class or visiable(since C++14) template is instantiated, and there are partial specializations available, the compiler has to decide if the primary template is going to be used or one of its partial specializations.
 
-     * If only one specialization matchs the template arguments, that specialization is used.
-     * If more than one specialization matchs, partial order rules are used to determine which specialization is more specialized. The most specialized specialization is used, if it is unique(if it is not unique, the program cannot be compiled)
-     * If no specializations match, the primary template is used
+* If only one specialization matchs the template arguments, that specialization is used.
+* If more than one specialization matchs, partial order rules are used to determine which specialization is more specialized. The most specialized specialization is used, if it is unique(if it is not unique, the program cannot be compiled)
+* If no specializations match, the primary template is used
 
 ```C++
 template<class T1, class T2, int I>
 class A {};            // primary template
- 
+
 template<class T, int I>
 class A<T, T*, I> {};  // #1: partial specialization where T2 is a pointer to T1
- 
+
 template<class T, class T2, int I>
 class A<T*, T2, I> {}; // #2: partial specialization where T1 is a pointer
- 
+
 template<class T>
 class A<int, T*, 5> {}; // #3: partial specialization where T1 is int, I is 5,
                         //     and T2 is a pointer
- 
+
  template<class X, class T, int I>
  class A<X, T*, I> {};   // #4: partial specialization where T2 is a pointer
 
@@ -287,7 +288,7 @@ class A<int, T*, 5> {}; // #3: partial specialization where T1 is int, I is 5,
 
  ```
 
-    * How to judge which one is more specialized.
+* How to judge which one is more specialized.
 
 ```C++
 template<int I, int J, class T> struct X { }; // primary template
@@ -317,19 +318,19 @@ int main()
 
 ### Members of partial specializations
 
-     * Members of partial specializations are not related to the members of the primary template
+* Members of partial specializations are not related to the members of the primary template
 
-     * Explicit(full) specialization of a member of a partial a partial specialization is declared the same way as an explicit specialization of the primary template
+* Explicit(full) specialization of a member of a partial a partial specialization is declared the same way as an explicit specialization of the primary template
 
 ```C++
 template<class T, int I>  // primary template
 struct A {
     void f(); // member declaration
 };
- 
+
 template<class T, int I>
 void A<T,I>::f() { } // primary template member definition
- 
+
 // partial specialization
 template<class T>
 struct A<T,2> {
@@ -337,16 +338,16 @@ struct A<T,2> {
     void g();
     void h();
 };
- 
+
 // member of partial specialization
 template<class T>
 void A<T,2>::g() { }
- 
+
 // explicit (full) specialization
 // of a member of partial specialization
 template<>
 void A<char,2>::h() {}
- 
+
 int main() {
     A<char,0> a0;
     A<char,2> a2;
@@ -359,11 +360,11 @@ int main() {
 }
 ```
 
-     * If a primary template is a member of another class template, its partial specialization are members of the enclosing class template.
+* If a primary template is a member of another class template, its partial specialization are members of the enclosing class template.
 
-     * If the primary member template is explicitly (fully) specialized for a given (implicit) specialization of the enclosing class template, the partial specializations of the member template are ignored for this specialization of the enclosing class template.
+* If the primary member template is explicitly (fully) specialized for a given (implicit) specialization of the enclosing class template, the partial specializations of the member template are ignored for this specialization of the enclosing class template.
 
-     * If a partial specialization of the member template is explicitly specialized for a given (implicit) specialization of the enclosing class template, the primary member template and its other partial specializations are still considered for this specialization of the enclosing class template.
+* If a partial specialization of the member template is explicitly specialized for a given (implicit) specialization of the enclosing class template, the primary member template and its other partial specializations are still considered for this specialization of the enclosing class template.
 
 ```C++
 template<class T> struct A { // enclosing class template
@@ -383,29 +384,31 @@ A<short>::B<int*> absip; // uses full specialization of the primary (ignores par
 A<char>::B<int> abci; // uses primary
 ```
 ### practice
-    * is_member_function_pointer
+>T is R(Args...)
+U is a CLASS
+For instance:
+  void func(int param);
+  void Foo::setAge(int age) {/*implementation*/}
+  is_member_pointer<decltype(&Foo::setAge)>::value;
+  in instataiation of is_member_pointer_help<T U::*>
+  T is same as func, U is same as Foo
+
+* __is_member_function_pointer__
+
     ```C++
     template<class T>
     struct is_member_pointer_helper : std::false_type{};
-    /*
-    T is R(Args...)
-    U is a CLASS
-    i.g.
-    void func(int param);
-    void Foo::setAge(int age) {/*implementation*/}
-    is_member_pointer<decltype(&Foo::setAge)>::value;
-    in instataiation of is_member_pointer_help<T U::*>
-    T is same as func, U is same as Foo
-    */
+
     template<typename T, class U>
     struct is_member_pointer_helper<T U::*> : std::true_type{};
-    
+
     template<class T>
     struct is_member_pointer : is_member_pointer_helper<typename std::remove_cv<T>::type> {};
     ```
 
 ### FAQ
-    * What the heck is a functionoid, and why would I use one?
-    * What's the difference between a functionoid and a functor?
-    * Can you make functionoids faster than normal function calls?
-    * What's the difference between a pointer to member function and a pointer to function?
+
+* What the heck is a functionoid, and why would I use one?
+* What's the difference between a functionoid and a functor?
+* Can you make functionoids faster than normal function calls?
+* What's the difference between a pointer to member function and a pointer to function?
